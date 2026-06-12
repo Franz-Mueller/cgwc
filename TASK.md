@@ -18,8 +18,19 @@ Queries all results for a given URL in one or more given crawls.
 
 #### Process
 
-
+    url = f"https://index.commoncrawl.org/{index_name}-index"
+    params = [
+        ("url", pattern),
+        ("output", "json"),
+        ("filter", "status:200"),
+        ("filter", "mime:text/html"),
+        ("fl", "url,mime,status,timestamp,filename,offset,length,digest"),
+        ("collapse", "digest"),
+    ]
+    requests.get(url, params=params, timeout=120, stream=True)
 
 ### crawls
 
 Returns a list of available crawls.
+
+https://index.commoncrawl.org/collinfo.json
