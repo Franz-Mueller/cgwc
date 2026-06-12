@@ -3,6 +3,8 @@ use std::path::PathBuf;
 
 use clap::{Command, arg};
 
+use crate::
+
 fn cli() -> Command {
     Command::new("ccwc")
         .about("A tool to reconstruct lost websites from CommonCrawl Data")
@@ -12,8 +14,10 @@ fn cli() -> Command {
             Command::new("construct")
                 .about("Reconstructs the given URL locally")
                 .arg(arg!(<URL> "The URL to construct"))
+                .arg(arg!(<CRAWL> "The Crawl to query from"))
                 .arg_required_else_help(true),
         )
+        .subcommand(Command::new("crawls").about("Retrieves a list of available crawls"))
 }
 
 fn main() {
