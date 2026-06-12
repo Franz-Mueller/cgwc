@@ -1,23 +1,31 @@
-use clap::Parser;
+use std::ffi::OsString;
+use std::path::PathBuf;
 
-/// Search for a pattern in a file and display the lines that contain it.
-#[derive(Parser, Debug)]
-#[command(version, about, long_about = None)]
-struct Args {
-    /// The url to search for
-    #[arg(short, long)]
-    url: String,
-    /// The Crawl to query
-    #[arg(short, long)]
-    crawl: String,
-    /// Where to save the files
-    #[arg(short, long)]
-    save_at: std::path::PathBuf,
-    /// Determines if a path can exist more than one time, if yes, newer version will be kept.
-    #[arg(short, long, default_value_t = false)]
-    allow_douplicates: bool,
+use clap::{Command, arg};
+
+fn cli() -> Command {
+    Command::new("ccwc")
+        .about("A tool to reconstruct lost websites from CommonCrawl Data")
+        .subcommand_required(true)
+        .arg_required_else_help(true)
+        .subcommand(
+            Command::new("construct")
+                .about("Reconstructs the given URL locally")
+                .arg(arg!(<URL> "The URL to construct"))
+                .arg_required_else_help(true),
+        )
 }
 
 fn main() {
-    let args = Args::parse();
+    let matches = cli().get_matches();
+
+    match matches.subcommand() {
+        Some(("construct", sub_matches)) => {
+            println!(
+                "Cloning {}",
+                sub_matches.get_one::<String>("URL").expect("required")
+            );
+        }
+        _ => unreachable!(),
+    }
 }
